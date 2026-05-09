@@ -1,0 +1,35 @@
+# 1. DESACTIVAR MODSECURITY (Instrucción de Hostinger)
+# Esto evita que el servidor bloquee los tokens por seguridad excesiva.
+<IfModule mod_security.c>
+  SecFilterEngine Off
+  SecFilterScanPOST Off
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # 2. MANEJAR AUTHORIZATION HEADER (Sanctum/Bearer)
+    # Añadimos SetEnvIf para mayor compatibilidad en hosting compartido.
+    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # 3. MANEJAR X-XSRF-TOKEN (Tus reglas originales)
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # 4. REDIRECCIÓN DE BARRAS FINALES (Trailing Slashes)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # 5. ENVIAR PETICIONES AL FRONT CONTROLLER (index.php)
+    # Esto asegura que Laravel maneje las rutas de la API.
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

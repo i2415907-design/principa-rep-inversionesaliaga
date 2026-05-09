@@ -1,0 +1,24 @@
+{
+  "_sweetalert-l0sNRNKZ.js": {
+    "file": "assets/sweetalert-l0sNRNKZ.js",
+    "name": "sweetalert"
+  },
+  "_vendor-uv6MXN1z.js": {
+    "file": "assets/vendor-uv6MXN1z.js",
+    "name": "vendor"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-BuKhgQ75.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-D56mWu1S.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_vendor-uv6MXN1z.js"
+    ]
+  }
+}
