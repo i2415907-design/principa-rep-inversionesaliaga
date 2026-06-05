@@ -104,7 +104,7 @@ Route::middleware(['auth', 'checkRol:admin,gerente,cajero,vendedor'])->group(fun
     Route::post('/admin/usuarios/{id}', [PerfilAdminController::class, 'updateUser'])->name('usuarios.update');
     Route::post('/admin/usuarios/{id}/toggle', [PerfilAdminController::class, 'toggleStatus'])->name('usuarios.toggle');
     Route::get('/admin/ventas', [VentaController::class, 'index'])->name('admin.ventas');
-    Route::post('/admin/ventas', [VentaController::class, 'storeCompleta'])->name('ventas.store');
+    Route::post('/admin/ventas', [VentaController::class, 'storeCompleta'])->name('ventas.store.otra');
     Route::post('/admin/devoluciones', [VentaController::class, 'storeDevolucion'])->name('devoluciones.store');
     Route::get('/admin/productos/{id}', [VentaController::class, 'obtenerProducto'])->name('productos.obtener'); 
 });
