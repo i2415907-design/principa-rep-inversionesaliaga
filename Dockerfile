@@ -5,18 +5,17 @@ WORKDIR /app
 # Copiamos los archivos de configuración de Node
 COPY package*.json ./
 
-# Instalamos las dependencias base de tu proyecto
-RUN yarn install
+# Usamos npm ci (más rápido y estricto) o npm install, limitando el uso extremo de red/memoria
+RUN npm install --no-audit --no-fund
 
-# Forzamos la instalación de los paquetes faltantes para Vite
-RUN yarn add laravel-echo pusher-js
+# Instalamos los paquetes faltantes que te pedía Vite
+RUN npm install laravel-echo pusher-js
 
-# Copiamos el resto del código necesario para compilar
+# Copiamos el resto del código
 COPY . .
 
 # Compilamos los assets
-RUN yarn build
-
+RUN npm run build
 
 # === ETAPA 2: El servidor de Producción con PHP y Nginx ===
 FROM serversideup/php:8.2-fpm-nginx
