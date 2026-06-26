@@ -23,14 +23,17 @@ COPY --chown=www-data:www-data . .
 # Añade vendor desde la etapa Composer
 COPY --from=composer --chown=www-data:www-data /app/vendor /var/www/html/vendor
 
-# Añade TODO el contenido de public compilado por Node (Vite)
+# Añade TODO el contenido de public compilado por Node
 COPY --from=node-builder --chown=www-data:www-data /app/public /var/www/html/public
 
-# Asegura permisos correctos para que Laravel 12 pueda escribir caché y subir archivos
+# 1. Crear carpetas vitales por si GitHub las ignoró (.gitignore)
+RUN mkdir -p storage/app/public storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
+
+# 2. Dar permisos absolutos para que Laravel no tire Error 500
 RUN chmod -R 775 storage bootstrap/cache && chown -R www-data:www-data storage bootstrap/cache
 
-# CORRECCIÓN AQUÍ: Crea el enlace simbólico y optimiza Laravel al compilar la imagen
-RUN php artisan storage:link --force && php artisan config:cache && php artisan route:cache
+# 3. Crear el link (SIN usar config:cache para que lea las variables en vivo)
+RUN php artisan storage:link --force
 
 ENV AUTORUN_ENABLED=true
 EXPOSE 8080
